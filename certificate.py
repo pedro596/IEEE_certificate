@@ -61,8 +61,8 @@ def createCertificate(
 	pdf.cell(240,10,'Porto, '+workshop_month+' '+str(workshop_day)+', '+str(workshop_year),0,1,'L')
 
 	#Speaker & Chair Signature
-	pdf.image(workshop_name+'/signatures/speaker.jpg',167.5,170, 0, 17,'','')
-	pdf.image(workshop_name+'/signatures/chair.jpg',240.5,170, 0, 17,'','')
+	pdf.image(workshop_name+'/signatures/Speaker.jpg',157,166, 60, 17,'','')
+	pdf.image(workshop_name+'/signatures/chair.jpg',230,166, 60, 17,'','')
 
 	#Speaker & Chair
 	pdf.set_font('Arial','',18)
