@@ -1,35 +1,62 @@
-__author__ = 'pedro'
+#!/usr/bin/env python
+# -*- coding: utf8 -*-
 
-from easygui import passwordbox
+# ------------------------------------------------------ #
+#  Email Certificate Sender Version:1.0 Date: 4/May/14   #
+# ---------- Specially designed to ISEPinIEEE ---------- # 
+#  Authors:Pedro Sousa (main author)                     #
+#          Victor Fernandes (attachment)                 #
+#                                   Language: Python 2.7 #
+# ------------------------------------------------------ #
+
 import smtplib
 
-class EmailSender:
-    def __init__(self, user, password, server):
-        self.user = user
-        self.server = server
-        self.password = password
-        self.server = smtplib.SMTP(server)
-        self.server.starttls()
-        self.server.login(self.user, self.password)
-
-    def send(self, toaddrs, msg):
-        x = self.server.sendmail(self.user, toaddrs, msg)
-        print x
-
-    def quit(self):
-        self.server.quit()
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMENonMultipart import MIMENonMultipart
+from email.MIMEText import MIMEText
+from email.MIMEImage import MIMEImage
 
 
+#Global Variables 
+username = ""
+password = ""
 
 
+def mailCredentials(user, passwd):
+    username = user
+    password = passwd
+
+def sendCertificate(
+    workshop_name,
+    student_name,
+    student_mail
+    ):
+    #prepare message
+    msg = MIMEMultipart()
+    msg['Subject'] = '[ISEPinIEEE] Certificate \"'+workshop_name+'\"'
+    msg.attach(MIMEText("Hi "+student_name+""",\n
+Attached goes the certificate that proves your participation in the activity \""""+workshop_name+"""\".\n
+Kind Regards,
+ISEPinIEEE - IEEE Student Branch\n\n 
+This email and the certificates were generated automatically by the software ISEPinIEEE Certificates.
+If you have any problem, please report the error to pedro.sousa.pt@ieee.org or victor.fernandes.1991@ieee.org
+"""  , "plain", _charset="utf-8"))
+    fp = open(workshop_name+'/certificate.pdf', 'rb')
+    attach = MIMENonMultipart('application', 'pdf')
+    payload = (fp.read()).encode('base64')
+    attach.set_payload(payload)
+    attach['Content-Transfer-Encoding'] = 'base64'
+    fp.close()
+    attach.add_header('Content-Disposition', 'attachment', filename = 'Certificate.pdf')
+    msg.attach(attach)
+    #start server
+    s = smtplib.SMTP("smtp.gmail.com:587")
+    s.starttls()
+    s.login(username, password)
+    #send mail
+    s.sendmail(username, student_mail, msg.as_string())
+    s.quit()      
 
 if __name__ == '__main__':
-    username = raw_input("Your Gmail:")
-    password = passwordbox("What is your password ?")
-    sendto = raw_input("Send email to:")
-    emailtest = EmailSender(username, password, "smtp.gmail.com:587")
-    emailtest.send(sendto, "This is a test email!!")
-    emailtest.quit()
-
-
-
+    mailCredentials()
+    sendCertificate("Python Workshop", "João cabeça de melão", username)

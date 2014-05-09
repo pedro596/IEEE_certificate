@@ -80,8 +80,7 @@ def createCertificate(
 	pdf.image('logos/ieee_logo.jpg',20,175, 0, 17,'','')
 	pdf.image('logos/isep_logo.jpg',85,175, 0, 17,'','')
 	# Save PDF File
-	certificate_name = hashlib.md5(student_mail)
-	pdf.output(workshop_name+'/'+certificate_name.hexdigest()+'.pdf','F')
+	pdf.output(workshop_name+'/certificate.pdf','F')
 
 if __name__ == '__main__':
 	createCertificate("Python Workshop", 3, '<MONTH>', 2014, '<SPEAKER NAME>', '<STUDENT NAME>', 'test@ieee.dee.isep.ipp.pt','<CHAIR NAME>')
